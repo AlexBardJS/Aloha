@@ -68,6 +68,8 @@ be caught somehow, possibly with use of the a check for primary key or something
 
 [Unzip files and Rename](http://stackoverflow.com/questions/25432321/unix-shell-scripting-unzip-multiple-zip-files-rename-unzipped-file-following)
 
+[Python Find Newest Files in Directory](http://stackoverflow.com/questions/8087693/python-code-to-find-all-newly-created-modified-and-deleted-files-in-all-the-dir)
+
 [Python Convert DBF to CSV File](https://gist.github.com/bertspaan/8220892)
 
 [Python Bulk Conversion of DBF to CSV](http://gis.stackexchange.com/questions/93303/bulk-convert-dbf-to-csv-in-a-folder-arcgis-10-1-using-python)
