@@ -11,7 +11,7 @@ unzip.sh to be used on the EC2 instance.<br />
 pc you are using, WIN SFTP does not allow automating certificate acceptance so it must be done manually::</sub>
 
 
-**unzip.sh**-- Linux script that unzips the folder that was just transfered, moves all the files in the subdirectory one level up
+**new_unzip.sh**-- Linux script that unzips the folder that was just transfered, moves all the files in the subdirectory one level up
 and makes a new folder of the same name for the conversion from .dbf to .csv. The script then renames all files by taking the name
 of the folder after the underscore (which contains the store number that the file came from and was renamed with in the previous script)
 and deletes the now empty subdirectory. The script then calls the rest of the files necessary to finish conversion and transfer
@@ -28,21 +28,38 @@ converting the file to csv in it's new location (the no longer empty CSV folder)
 **delete.py**-- Simple python file that deletes the now converted DBF files and it's folder.
 
 
-**linecount.sh**-- Script file that checks each CSV file's line count. If there is only one line (the header line), the file is 
-deleted. Also manually deletes files that contain unnecessary content.
+**rmmost.sh**-- Linux script file that deletes every file in the *_CSV folder except the 13 files that are specified.<br />
+<sub>::The loop might not be necessary, left in for now for testing. Might be removed later on. On the note of unnecessary,
+might be able to combine this script within the <b>new_unzip.sh</b> file, being left in for function seperation and to avoid 
+confliction when testing on multiple folders. Will take a closer look when we begin live testing::</sub>
 
-
-**charstrip.sh**-- This file is very specific to hashed password. If there is an escape character "\\" next to a column seperator
-"," this file deletes the escape characters in the file so that it does not interfere with uploading the file into MySQL.
-
-**insert_mysql.sh**-- This begins the creation of tables in MySQL by using the name of the file as the table name and the header
-row for the creation of the columns. Currently taking all information from all of the files and uploading it. Columns are also
-all varchar(255) which may have to be changed later on. One file in particular contains too much information in the rows to be
-uploaded as varchar(255) so it catches that error and uses BLOB to upload that information to MySQL. All MySQL credentials 
-are contained in the .my.cnf file located in the root folder. Send all errors to an error_log file for later review. <br />
+**new_mysql.sh**--This begins the creation of tables in MySQL by using the name of the file as the table name and 
+the header row for the creation of the columns. Currently taking all information from all of the files remaining and uploading it. 
+Columns are also all varchar(255) which may have to be changed later on. All MySQL credentials are contained in the .my.cnf file 
+located in the root folder. Send all errors to an error_log file for later review. <br />
 <sub>::as of this moment there are no primary or foreign keys in the tables, this file is just uploading information as it. 
 the `LOAD DATA INFILE` command also appends information to a file without checking if that data already exists, will have to 
 be caught somehow, possibly with use of the a check for primary key or something similar::</sub>
+
+
+##Folder: old_files
+
+
+**unzip.sh**--(*Depreciated*) The original unzip file, except that it has calls to the scripts below instead of the new updated scripts. 
+See details of **new_unzip.sh** for more details.<br />
+
+
+**linecount.sh**--(*Depreciated*) Script file that checks each CSV file's line count. If there is only one line (the header line), the
+file is deleted. Also manually deletes files that contain unnecessary content. 
+
+
+**charstrip.sh**--(*Depreciated*) This file is very specific to hashed password. If there is an escape character "\\" next to a column
+seperator "," this file deletes the escape characters in the file so that it does not interfere with uploading the file into MySQL.
+
+
+**insert_mysql.sh**--(*Depreciated*) This file is has the majority of the same content and purpose as **new_mysql.sh** with only one difference, one file that was used for testing contains too much information in the rows to be uploaded as varchar(255). This is caught  and BLOB is used in a seperate function to upload that specific information to MySQL. <br />
+
+
 <br /> <br />
 
 
@@ -75,6 +92,8 @@ be caught somehow, possibly with use of the a check for primary key or something
 [Python Bulk Conversion of DBF to CSV](http://gis.stackexchange.com/questions/93303/bulk-convert-dbf-to-csv-in-a-folder-arcgis-10-1-using-python)
 
 [Python Remove a Non-Empty Path](http://stackoverflow.com/questions/303200/how-do-i-remove-delete-a-folder-that-is-not-empty-with-python)
+
+[Bash Delete All Files in Directory Except Those Specified](http://www.cyberciti.biz/faq/linux-bash-delete-all-files-in-directory-except-few/)
 
 [Unix Script Delete File with One Line](http://stackoverflow.com/questions/5327981/unix-script-to-delete-file-if-it-contains-single-line)
 
