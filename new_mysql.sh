@@ -1,11 +1,12 @@
 #!/bin/sh
 
-MYSQL_ARGS=" --defaults-file=/home/ec2-user/script/.my.cnf"
+MYSQL_ARGS=" --defaults-file=/<home>/.my.cnf"
 DB="TEST"
 DELIM=","
 QT='"'
 RTRN='\r\n'
-CSV="/mnt/Aloha/CSV-F/*/"
+dir="/mnt/Aloha/<csv-folder>"
+CSV=$dir/*/
 
 vc_insert() {
 	FIELDS=$(head -1 "$cs" | sed -e 's/'$DELIM'/` varchar(255),\n`/g' -e 's/\r//g')
@@ -24,12 +25,18 @@ vc_insert() {
 }
 
 cd $CSV
+
 	for cs in *.csv; do
 		TABLE="${cs%*.csv}"
 
 		[ "$cs" = "" -o "$TABLE" = "" ] && echo "Error in command: $0 empty set" && exit 1
 
 		vc_insert 
+		if [ $? -eq 0 ]; then
+			rm -f $cs
+		fi
+        done
 
-done
+cd $dir
 
+find * -type d -empty  -delete

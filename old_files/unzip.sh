@@ -2,7 +2,7 @@
 
 #dir=/mnt/Aloha/
 cur=$(pwd)
-CSV=$cur/CSV-F/
+CSV=$cur/<csv-folder>/
 
 cd $CSV
 for zip in *.zip; do

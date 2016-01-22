@@ -5,7 +5,7 @@ DB="TEST"
 DELIM=","
 QT='"'
 RTRN='\r\n'
-CSV="$(pwd)/CSV-F/*/"
+CSV="$(pwd)/<csv-folder>/*/"
 
 vc_insert() {
 	FIELDS=$(head -1 "$cs" | sed -e 's/'$DELIM'/` varchar(255),\n`/g' -e 's/\r//g')

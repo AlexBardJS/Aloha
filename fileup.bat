@@ -26,4 +26,4 @@ FOR /F %%i IN ('DIR /B /O:D *.zip') DO (
 cd %current%
 
 winscp.com /command "open sftp://ec2-user@<ec2-private-instance>.us-west-2.compute.amazonaws.com -privatekey=%KEYPATH%\<private-key>.ppk" ^
-"cd /mnt/Aloha/<csv-folder>" "put %NEWPATH%\!NEW!" "cd /home/ec2-user/script/" "call /home/ec2-user/script/unzip.sh" "exit"
+"cd /mnt/Aloha/<csv-folder>" "put %NEWPATH%\!NEW!" "cd /<home>/" "call /<home>/unzip.sh" "exit"

@@ -6,7 +6,7 @@ This is a brief overview of what each file contains and it's explicit purpose.
 This file sorts the set directory by date and takes the newest folder (located at the bottom of the sort stack) and transfers
 that file to another folder. From there it is renamed and transfered via SFTP to the private EC2 instance. This file depends on
 WINSCP and uses the WIN command to do this transfer without input from the command line. This file also calls the next file for use,
-unzip.sh to be used on the EC2 instance.<br />
+**new_unzip.sh**, to be used on the EC2 instance.<br />
 <sub>::sidenote, when using WIN you need to first ssh into your instance using the WIN GUI login to set the certificate for the
 pc you are using, WIN SFTP does not allow automating certificate acceptance so it must be done manually::</sub>
 
@@ -16,27 +16,25 @@ and makes a new folder of the same name for the conversion from .dbf to .csv. Th
 of the folder after the underscore (which contains the store number that the file came from and was renamed with in the previous script)
 and deletes the now empty subdirectory. The script then calls the rest of the files necessary to finish conversion and transfer
 and removes the zip file.<br />
-<sub>::file calls get a bit laggy towards the end, possible replace of file calls from this script to an AWS Lambda function 
-that can call these at a specified time later on ::</sub>
+<sub>::file edited to help improve lag, remove script gets called in the middle to instead of at the end to help improve overall runtime ::</sub>
+
+**rmDBF.sh**-- Linux script file that deletes every file in the unzipped folder except the 13 files that are specified.<br />
+<sub>::has replaced **rmmost.sh** and **linecount.sh** in order to improve call time, instead of waiting until all files are 
+converted by the following python scripts all files that are not going to be used are deleted as soon as the folder is unzipped,
+cuts the run time significantly::</sub>
 
 
 **mod.py**-- Python file that finds a folder, uploaded in the last 30 minutes, and searches the name to make sure it is not the
 currently empty CSV folder. This file then starts the conversion from dbf file to csv file by checking each file extension and
-converting the file to csv in it's new location (the no longer empty CSV folder). 
+converting the file to csv in it's new location (the aforementioned CSV folder). 
 
 
 **delete.py**-- Simple python file that deletes the now converted DBF files and it's folder.
 
 
-**rmmost.sh**-- Linux script file that deletes every file in the *_CSV folder except the 13 files that are specified.<br />
-<sub>::The loop might not be necessary, left in for now for testing. Might be removed later on. On the note of unnecessary,
-might be able to combine this script within the <b>new_unzip.sh</b> file, being left in for function seperation and to avoid 
-confliction when testing on multiple folders. Will take a closer look when we begin live testing::</sub>
-
 **new_mysql.sh**--This begins the creation of tables in MySQL by using the name of the file as the table name and 
 the header row for the creation of the columns. Currently taking all information from all of the files remaining and uploading it. 
-Columns are also all varchar(255) which may have to be changed later on. All MySQL credentials are contained in the .my.cnf file 
-located in the root folder. Send all errors to an error_log file for later review. <br />
+Columns are also all varchar(255) which may have to be changed later on. After each file is uploaded, if there is no errors in the upload, the file is deleted. If there are no errors in total, the folder will be deleted when empty. Send all errors to an error_log file for later review. <br />
 <sub>::as of this moment there are no primary or foreign keys in the tables, this file is just uploading information as it. 
 the `LOAD DATA INFILE` command also appends information to a file without checking if that data already exists, will have to 
 be caught somehow, possibly with use of the a check for primary key or something similar::</sub>
@@ -49,6 +47,10 @@ be caught somehow, possibly with use of the a check for primary key or something
 See details of **new_unzip.sh** for more details.<br />
 
 
+**rmmost.sh**--(*Depreciated*) Linux script file that deletes every file in the CSV folder except the 13 files that are specified.<br />
+<sub>::The loop is unnecessary, left in for testing. Could not combine this script within the <b>new_unzip.sh</b> file, it works but it looks messy and congested. Being left in seperate file for function seperation and overall neat code.::</sub>
+
+
 **linecount.sh**--(*Depreciated*) Script file that checks each CSV file's line count. If there is only one line (the header line), the
 file is deleted. Also manually deletes files that contain unnecessary content. 
 
@@ -57,7 +59,9 @@ file is deleted. Also manually deletes files that contain unnecessary content.
 seperator "," this file deletes the escape characters in the file so that it does not interfere with uploading the file into MySQL.
 
 
-**insert_mysql.sh**--(*Depreciated*) This file is has the majority of the same content and purpose as **new_mysql.sh** with only one difference, one file that was used for testing contains too much information in the rows to be uploaded as varchar(255). This is caught  and BLOB is used in a seperate function to upload that specific information to MySQL. <br />
+**insert_mysql.sh**--(*Depreciated*) This file is has the majority of the same content and purpose as **new_mysql.sh** with only one 
+difference, one file that was used for testing contains too much information in the rows to be uploaded as varchar(255). This is caught 
+and BLOB is used in a seperate function to upload that specific information to MySQL. <br />
 
 
 <br /> <br />

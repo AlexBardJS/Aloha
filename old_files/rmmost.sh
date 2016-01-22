@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CSV="/mnt/Aloha/CSV-F/*/"
+CSV="/mnt/Aloha/<csv-folder>/*/"
 cd $CSV
 for cs in *.csv; do
 

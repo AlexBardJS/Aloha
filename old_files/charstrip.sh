@@ -1,7 +1,7 @@
 #!/bin/sh
 
 cur=$(pwd)
-CSV=$cur/CSV-F/*/*.csv
+CSV=$cur/<csv-folder>/*/*.csv
 
 #regex='*\\(?=,)'
 
