@@ -34,6 +34,6 @@ cd $cur
 
 #insert to mysql database TEST
 #send all errors to error_log.txt in current folder
-./new_mysql.sh >error_log.txt 2>error_log.txt
+./new_mysql.sh >>error_log.txt 2>>error_log.txt
 
 exit
